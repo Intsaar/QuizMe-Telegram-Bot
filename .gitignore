@@ -1,0 +1,5 @@
+.env
+temp/
+_pycache_/
+*.pdf
+*.png
