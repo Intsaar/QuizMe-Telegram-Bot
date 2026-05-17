@@ -194,7 +194,7 @@ app.add_handler(MessageHandler(filters.Document.PDF, handle_pdf))
 
 print("⚡ QuizMe Bot is fully running with Gemini Vision API ...")
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     from aiohttp import web
 
     async def hello(request):
