@@ -185,22 +185,56 @@ async def handle_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if os.path.exists(str(pdf_path)):
             os.remove(str(pdf_path))
 
+# Build the application using the token (Make sure this variable name matches your setup)
+application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
-# executing the bot
-app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CommandHandler("stop", stop))
-app.add_handler(MessageHandler(filters.Document.PDF, handle_pdf))
+# Add handlers to the application
+application.add_handler(CommandHandler("start", start))
+application.add_handler(CommandHandler("stop", stop))
+application.add_handler(MessageHandler(filters.Document.PDF, handle_pdf))
 
-print("⚡ QuizMe Bot is fully running with Gemini Vision API ...")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    from aiohttp import web
+    from telegram.ext import Update
+
+    # 1. Define the webhook handler to receive updates from Telegram
+    async def telegram_webhook(request):
+        global application  # Access the global application variable
+        
+        # Read the incoming JSON data from Telegram
+        data = await request.json()
+        # Convert JSON to a Telegram Update object and push it to the application queue
+        update = Update.de_json(data, application.bot)
+        await application.update_queue.put(update)
+        return web.Response(text="OK")
+
+    # Simple health check endpoint for browser access and Render pings
+    async def hello(request):
+        return web.Response(text="Bot Webhook is running smoothly!")
+
+    # 2. Initialize the aiohttp web application
+    web_app = web.Application()
+    web_app.router.add_post("/webhook", telegram_webhook)  # Endpoint for Telegram updates
+    web_app.router.add_get("/", hello)                      # Root endpoint for Render port scan
+
     port = int(os.environ.get("PORT", 10000))
+    
+    # 3. Startup hook to initialize the bot and set the webhook URL with Telegram
+    async def start_bot_webhook(app_arg):
+        global application  # Access the global application variable
+        
+        await application.initialize()
+        await application.start()
+        # Register the webhook URL and secret token with Telegram
+        await application.bot.set_webhook(
+            url="https://quizme-telegram-bot-1.onrender.com/webhook",
+            secret_token="quizme_secret_2025"
+        )
+        print("Webhook has been set successfully with Telegram!")
 
-    app.run_webhook(
-        listen="0.0.0.0",
-        port=port,
-        webhook_url="https://quizme-telegram-bot-1.onrender.com/webhook"
-    )
-
-
+    # Attach the startup hook to the web application
+    web_app.on_startup.append(start_bot_webhook)
+    
+    # 4. Start the aiohttp web server (This successfully passes Render's port binding check)
+    web.run_app(web_app, host="0.0.0.0", port=port)
