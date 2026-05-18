@@ -197,19 +197,23 @@ print("⚡ QuizMe Bot is fully running with Gemini Vision API ...")
 if __name__ == '__main__':
     from aiohttp import web
 
+
     async def hello(request):
         return web.Response(text="Bot is running smoothly!")
 
+
     web_app = web.Application()
     web_app.router.add_get("/", hello)
+
 
     port = int(os.environ.get("PORT", 10000))
     
     async def start_bot_with_web(app_arg):
         await app.initialize()
         await app.start()
-        await app.updater.start_polling()
+        await app.updater.start_polling(drop_pending_updates=True)
         print("Bot is live and polling!")
+
 
     web_app.on_startup.append(start_bot_with_web)
     web.run_app(web_app, host="0.0.0.0", port=port)
