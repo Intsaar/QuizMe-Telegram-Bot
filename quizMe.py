@@ -54,7 +54,7 @@ Rules:
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🧠 أهلاً بك في QuizMe!\n"
-        "أرسل لي ملف PDF (تجميعات، صور، أو أسئلة) وسأقوم بتحويله لك إلى كويز تفاعلي فوراً مجاناً! 🚀"
+        "أرسل لي ملف PDF (تجميعات، صور، أو أسئلة) وسأقوم بتحويله لك إلى كويز تفاعلي فوراً! 🚀"
     )
 
 
@@ -65,7 +65,7 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data["stop_requested"] = True
         await update.message.reply_text("🛑 جاري إيقاف الكويز... تم إلغاء بقية الأسئلة بنجاح.")
     else:
-        await update.message.reply_text("💡 لا يوجد كويز شغال حالياً لإيقافه")
+        await update.message.reply_text("💡تم ايقاف الكويز")
 
 # processing the file
 async def handle_pdf(update: Update, context: ContextTypes.DEFAULT_TYPE):
