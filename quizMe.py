@@ -201,9 +201,21 @@ if __name__ == '__main__':
     # 1. Define the webhook handler to receive updates from Telegram
     async def telegram_webhook(request):
         global application  # Access the global application variable
+
+        secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
+
+        if secret != os.environ["SECRET_TOKEN"]:
+            return web.Response(status=403)
         
         # Read the incoming JSON data from Telegram
-        data = await request.json()
+        try:
+
+            data = await request.json()
+
+        except Exception:
+
+            return web.Response(status=400, text="Invalid JSON")
+
         # Convert JSON to a Telegram Update object and push it to the application queue
         update = Update.de_json(data, application.bot)
         await application.update_queue.put(update)
