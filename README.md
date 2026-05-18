@@ -65,13 +65,21 @@ python bot.py
 ```
 
 ---
+## ☁️ Deployment (Render)
 
-## ☁️ Deployment (Cloud)
+This project is configured to run smoothly as a *Web Service* on *Render* (Free Tier), using a built-in aiohttp web server to handle port binding efficiently without extra hosting costs.
 
-This repository is optimized for one-click deployment on **Render** as a **Background Worker**:
-1. Connect your GitHub repository to Render.
-2. Set the Environment Variables (`TELEGRAM_TOKEN`, `GEMINI_API_KEY`) in the advanced settings dashboard.
-3. Set the Build Command to `pip install -r requirements.txt` and the Start Command to `python bot.py`.
+### How to Deploy:
+1. *Create a Web Service* on [Render](https://render.com/).
+2. Connect your GitHub repository: QuizMe-Telegram-Bot.
+3. Select the *Free Tier ($0/month)*.
+4. Set the following commands:
+   - *Build Command:* pip install -r requirements.txt
+   - *Start Command:* python quizMe.py
+5. Add your environment variables under *Advanced*:
+   - TELEGRAM_TOKEN: Your Telegram Bot API Token.
+   - GEMINI_API_KEY: Your Google Gemini API Key.
+6. Click *Create Web Service* and the bot will be live 24/7!
 
 ---
 
