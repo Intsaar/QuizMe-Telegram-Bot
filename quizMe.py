@@ -196,7 +196,7 @@ application.add_handler(MessageHandler(filters.Document.PDF, handle_pdf))
 
 if __name__ == '__main__':
     from aiohttp import web
-    from telegram.ext import Update
+    from telegram import Update
 
     # 1. Define the webhook handler to receive updates from Telegram
     async def telegram_webhook(request):
