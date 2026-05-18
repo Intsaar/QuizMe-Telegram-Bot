@@ -227,10 +227,12 @@ if __name__ == '__main__':
         await application.initialize()
         await application.start()
         # Register the webhook URL and secret token with Telegram
+        # Register the webhook URL and secret token with Telegram
         await application.bot.set_webhook(
-            url="https://quizme-telegram-bot-1.onrender.com/webhook",
-            secret_token="quizme_secret_2025"
+            url=os.environ["WEBHOOK_URL"],
+            secret_token=os.environ["SECRET_TOKEN"]
         )
+        
         print("Webhook has been set successfully with Telegram!")
 
     # Attach the startup hook to the web application
